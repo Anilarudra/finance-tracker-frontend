@@ -1,0 +1,103 @@
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { LogIn, User, Lock, TrendingUp } from 'lucide-react';
+
+const Login = () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { login } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+    
+    if (!email.trim() || !password.trim()) {
+      setError('Please input both email and password.');
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      await login(email.trim(), password);
+      navigate('/dashboard');
+    } catch (err) {
+      setError(err.message || 'Invalid email or password. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <div className="auth-wrapper">
+      <div className="auth-card glass-panel">
+        <div className="auth-header">
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>
+            <TrendingUp size={32} style={{ color: 'var(--primary)' }} />
+            <h1 style={{ margin: 0 }}>FinanceFlow</h1>
+          </div>
+          <p>Login to secure your financial tracker</p>
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          {error && <div className="alert alert-error">{error}</div>}
+
+          <div className="field-group">
+            <label htmlFor="email">Enter email</label>
+            <div style={{ position: 'relative' }}>
+              <input
+                type="text"
+                id="email"
+                className="form-control"
+                style={{ paddingLeft: '2.5rem', width: '100%' }}
+                placeholder="Enter your email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <User size={18} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+            </div>
+          </div>
+
+          <div className="field-group">
+            <label htmlFor="password">Password</label>
+            <div style={{ position: 'relative' }}>
+              <input
+                type="password"
+                id="password"
+                className="form-control"
+                style={{ paddingLeft: '2.5rem', width: '100%' }}
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <Lock size={18} style={{ position: 'absolute', left: '10px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} />
+            </div>
+          </div>
+
+          <button 
+            type="submit" 
+            className="btn btn-primary" 
+            style={{ width: '100%', marginTop: '1rem' }}
+            disabled={isLoading}
+          >
+            {isLoading ? 'Verifying...' : 'Sign In'}
+            {!isLoading && <LogIn size={18} />}
+          </button>
+        </form>
+
+        <div className="auth-footer">
+          Don't have an account? <Link to="/signup">Register here</Link>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default Login;
