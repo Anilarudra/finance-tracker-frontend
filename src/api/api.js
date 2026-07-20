@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://finance-tracker-backend-api-blop.onrender.com/api';
+const API_BASE_URL ='https://finance-tracker-backend-czjw.onrender.com/api';
 
 export const setToken = (token) => {
     localStorage.setItem("token", token);
