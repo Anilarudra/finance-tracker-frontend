@@ -383,15 +383,15 @@ const Transactions = () => {
                 <th>Description</th>
                 <th>Type</th>
                 <th>Category</th>
-                <th style={{ textAlign: 'right' }}>Amount</th>
                 
+                <th style={{ textAlign: 'right' }}>Amount</th>
                 <th style={{ textAlign: 'center' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
               {filteredTransactions.map(tx => (
                 <tr key={tx.id}>
-                  <td style={{ whiteSpace: 'nowrap' }}>{tx.date}</td>
+                  <td style={{ whiteSpace: 'nowrap' }}>{new Date(tx.date).toLocaleDateString("en-GB")}</td>
                   <td>{tx.note || tx.note || tx.description || '-'}</td>
                   <td>
                     <span className={`badge ${tx.type === 'INCOME' ? 'badge-income' : 'badge-expense'}`}>

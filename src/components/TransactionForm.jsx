@@ -12,7 +12,8 @@ const TransactionForm = ({ isOpen, onClose, onSubmit, initialData }) => {
     amount: '',
     category: '',
     date: new Date().toISOString().split('T')[0],
-    note: ''
+    note: '',
+    accountType:''
   });
   const [error, setError] = useState('');
 
@@ -73,7 +74,8 @@ const TransactionForm = ({ isOpen, onClose, onSubmit, initialData }) => {
       amount: parseFloat(formData.amount),
       category: formData.category,
       date: formData.date,
-      note: formData.note.trim()
+      note: formData.note.trim(),
+      accountType : formData.accountType
     });
   };
 
@@ -152,6 +154,7 @@ const TransactionForm = ({ isOpen, onClose, onSubmit, initialData }) => {
               className="form-control"
               required
             >
+              
               {TRANSACTION_CATEGORIES[formData.type].map(cat => (
                 <option key={cat} value={cat}>
                   {cat}
@@ -167,10 +170,27 @@ const TransactionForm = ({ isOpen, onClose, onSubmit, initialData }) => {
               id="txNote"
               name="note"
               value={formData.note}
+              autoComplete='off'
               onChange={handleChange}
               className="form-control"
               placeholder="e.g. Weekly grocery checkouts, salary credit"
             />
+          </div>
+
+          <div className="field-group">
+            <label htmlFor="accountType">Select Account</label>
+            <select
+              id="accountType"
+              name="accountType"
+              value={formData.accountType}
+              onChange={handleChange}
+              className="form-control"
+              required
+            >
+              <option value="">-- Select Account --</option>
+              <option value="PRIMARY">Primary Account</option>
+              <option value="SECONDARY">Secondary Account</option>
+            </select>
           </div>
 
           <div className="modal-footer">

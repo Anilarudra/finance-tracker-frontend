@@ -18,7 +18,7 @@ const Accounts = () => {
 
   useEffect(() => {
 
-    if(user){
+    if (user) {
       fetchAccounts();
     }
 
@@ -64,7 +64,7 @@ const Accounts = () => {
     try {
 
 
-      if(editingAccount){
+      if (editingAccount) {
 
         await api.updateAccount(
           editingAccount.id,
@@ -72,7 +72,7 @@ const Accounts = () => {
         );
 
 
-      }else{
+      } else {
 
 
         await api.createAccount(
@@ -89,7 +89,7 @@ const Accounts = () => {
       fetchAccounts();
 
 
-    } catch(err){
+    } catch (err) {
 
       setError(
         err.message || "Operation failed."
@@ -100,19 +100,19 @@ const Accounts = () => {
   };
 
 
-  const handleDeleteAccount = async(id)=>{
+  const handleDeleteAccount = async (id) => {
 
-    if(window.confirm(
+    if (window.confirm(
       "Are you sure you want to delete this account?"
-    )){
+    )) {
 
-      try{
+      try {
 
-        await api.deleteAccount(id);
+        await api.deleteAccount(user.userId,id);
 
         fetchAccounts();
 
-      }catch(err){
+      } catch (err) {
 
         setError(
           err.message || "Failed to delete account."
@@ -126,12 +126,12 @@ const Accounts = () => {
 
 
   const totalBalance = accounts.reduce(
-    (sum,a)=>sum + a.balance,
+    (sum, a) => sum + a.balance,
     0
   );
 
 
-  if(loading){
+  if (loading) {
 
     return (
       <div>
@@ -154,19 +154,15 @@ const Accounts = () => {
             Account Portfolios
           </h1>
 
-          <p>
-            Manage your accounts
-          </p>
-
         </div>
 
 
-        <button 
+        <button
           className="btn btn-primary"
           onClick={handleOpenAddModal}
         >
 
-          <Plus size={18}/>
+          <Plus size={18} />
           Add Account
 
         </button>
@@ -181,13 +177,12 @@ const Accounts = () => {
       }
 
 
-
       <div className="glass-panel">
 
-        <Landmark size={28}/>
-
+        <Landmark size={28} />
+        <br />
         <h2>
-          ${totalBalance.toLocaleString()}
+          Total Bank Balance : {totalBalance.toLocaleString()}
         </h2>
 
       </div>
@@ -198,34 +193,57 @@ const Accounts = () => {
 
         <div className="cards-grid">
 
-          {accounts.map(acc=>(
+          {accounts.map(acc => (
 
-            <div 
+            <div
               key={acc.id}
               className="glass-panel card-item"
             >
 
               <h3>
-                {acc.bankName}
+                Bank Name : {acc.bankName}
               </h3>
-
-
+              <br>
+              </br>
               <p>
-                {acc.accountNumber}
+                Account Number : {acc.accountNumber}
               </p>
-
+              <br>
+              </br>
+              
+              <p>
+                  Account Type : {acc.status}
+              </p>
+              <br />
 
               <h2>
-                ${acc.balance}
+                Balance : {acc.balance}
               </h2>
 
 
               <button
-                onClick={()=>handleDeleteAccount(acc.id)}
+                onClick={() => handleDeleteAccount(acc.id)}
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "8px",
+                  backgroundColor: "#dc2626",
+                  color: "#ffffff",
+                  border: "none",
+                  padding: "10px 16px",
+                  borderRadius: "8px",
+                  cursor: "pointer",
+                  fontWeight: "600",
+                  marginTop: "12px",
+                  width: "100%",
+                  transition: "0.2s ease"
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = "#b91c1c"}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = "#dc2626"}
               >
-
-                <Trash2 size={16}/>
-
+                <Trash2 size={18} />
+                Delete Account
               </button>
 
 
@@ -236,34 +254,24 @@ const Accounts = () => {
 
         </div>
 
-      ):(
+      ) : (
 
-        <div className="glass-panel">
+
+        <div className="glass-panel" style={{ marginTop: "24px", textAlign: "center" }}>
 
           <h3>
             No Accounts Configured
           </h3>
-
-
-          <button
-            className="btn btn-primary"
-            onClick={handleOpenAddModal}
-          >
-            Add Your First Account
-          </button>
-
-
         </div>
 
       )}
-
 
 
       <AccountForm
 
         isOpen={isModalOpen}
 
-        onClose={()=>{
+        onClose={() => {
           setIsModalOpen(false)
         }}
 

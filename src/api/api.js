@@ -59,6 +59,14 @@ export const api = {
   },
 
 
+  deleteAccount :async(userId,accountId) =>{
+
+    return request(`/users/${userId}/deleteaccount/${accountId}`,
+      {
+        method:"DELETE",
+      }
+    );
+  },
 
   // Transactions
 
@@ -159,24 +167,32 @@ const request = async (endpoint, options = {}) => {
         }
     });
 
+    // Handle errors
     if (!response.ok) {
-        const error = await response.text();
-        throw new Error(error);
+        let errorMessage = "Something went wrong";
+
+        const contentType = response.headers.get("content-type");
+
+        if (contentType && contentType.includes("application/json")) {
+            const errorData = await response.json();
+            errorMessage = errorData.message || errorMessage;
+        } else {
+            errorMessage = await response.text();
+        }
+
+        throw new Error(errorMessage);
     }
 
-    // Read response as text first
+    // Read successful response
     const text = await response.text();
 
-    // No response body
     if (!text) {
         return null;
     }
 
-    // If it's JSON, parse it
     try {
         return JSON.parse(text);
     } catch {
-        // Otherwise return plain text
         return text;
     }
 };

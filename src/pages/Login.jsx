@@ -7,7 +7,7 @@ const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  
+
   const [isLoading, setIsLoading] = useState(false);
 
   const { login } = useAuth();
@@ -16,7 +16,7 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-    
+
     if (!email.trim() || !password.trim()) {
       setError('Please input both email and password.');
       return;
@@ -27,7 +27,12 @@ const Login = () => {
       await login(email.trim(), password);
       navigate('/dashboard');
     } catch (err) {
-      setError(err.message || 'Invalid email or password. Please try again.');
+      console.log("Login error:", err);
+      console.log("Message:", err.message);
+
+      // setError("TEST ERROR");
+
+      setError(err.message || "Invalid Credentials");
     } finally {
       setIsLoading(false);
     }
@@ -45,8 +50,22 @@ const Login = () => {
         </div>
 
         <form onSubmit={handleSubmit}>
-          {error && <div className="alert alert-error">{error}</div>}
-
+          {error && (
+            <div
+              style={{
+                
+                color: "#dc2626",
+                
+                padding: "10px",
+                borderRadius: "6px",
+                marginBottom: "15px",
+                textAlign: "center",
+                fontWeight: "600"
+              }}
+            >
+              {error}
+            </div>
+          )}
           <div className="field-group">
             <label htmlFor="email">Enter email</label>
             <div style={{ position: 'relative' }}>
@@ -57,6 +76,7 @@ const Login = () => {
                 style={{ paddingLeft: '2.5rem', width: '100%' }}
                 placeholder="Enter your email"
                 value={email}
+                autoComplete='off'
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
@@ -81,9 +101,9 @@ const Login = () => {
             </div>
           </div>
 
-          <button 
-            type="submit" 
-            className="btn btn-primary" 
+          <button
+            type="submit"
+            className="btn btn-primary"
             style={{ width: '100%', marginTop: '1rem' }}
             disabled={isLoading}
           >

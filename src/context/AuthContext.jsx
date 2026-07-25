@@ -28,55 +28,37 @@ export const AuthProvider = ({ children }) => {
     }
     setLoading(false);
   }, []);
-
-  const login = async (email, password) => {
+const login = async (email, password) => {
 
     setError(null);
-    setLoading(true);
 
     try {
 
         const response = await api.login(email, password);
 
-        console.log("Backend login response:", response);
-
-
         const userData = {
-
             userId: response.userId,
-            email: response.email ,
-            token: response.token 
-
+            email: response.email,
+            token: response.token
         };
 
-
-        if(response.token){
+        if (response.token) {
             setToken(response.token);
         }
-
 
         localStorage.setItem(
             "ft_current_user",
             JSON.stringify(userData)
         );
 
-
         setUser(userData);
         setIsAuthenticated(true);
 
-        setLoading(false);
-
         return true;
 
+    } catch (err) {
 
-    } catch(err){
-
-        console.log("Login error:", err);
-
-        setError(err.message || "Login failed");
-
-        setLoading(false);
-
+        setError(err.message || "Invalid Credentials");
         throw err;
     }
 };
@@ -84,7 +66,7 @@ export const AuthProvider = ({ children }) => {
   const signup = async (name, email, password) => {
 
     setError(null);
-    setLoading(true);
+    
 
     try {
 
@@ -99,9 +81,6 @@ export const AuthProvider = ({ children }) => {
 
         });
 
-
-        setLoading(false);
-
         return response;
 
 
@@ -111,8 +90,6 @@ export const AuthProvider = ({ children }) => {
         setError(
             err.message || "Signup failed"
         );
-
-        setLoading(false);
 
         throw err;
 

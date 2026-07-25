@@ -164,9 +164,6 @@ const AccountForm = ({ isOpen, onClose, onSubmit, initialData }) => {
 
         </div>
 
-
-
-
         <form onSubmit={handleSubmit}>
 
 
@@ -198,6 +195,8 @@ const AccountForm = ({ isOpen, onClose, onSubmit, initialData }) => {
 
               className="form-control"
 
+              autoComplete='off'
+
             />
 
           </div>
@@ -223,6 +222,8 @@ const AccountForm = ({ isOpen, onClose, onSubmit, initialData }) => {
               onChange={handleChange}
 
               className="form-control"
+
+              autoComplete='off'
 
             />
 

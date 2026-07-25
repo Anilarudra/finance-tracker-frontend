@@ -99,12 +99,15 @@ const Signup = () => {
         </div>
 
         {success ? (
-          <div style={{ textAlign: 'center', padding: '2rem 1rem' }}>
-            <CheckCircle2 size={56} style={{ color: 'var(--success)', marginBottom: '1rem', display: 'block', margin: '0 auto 1rem' }} />
-            <div className="alert alert-success">{success}</div>
-            <Link to="/login" className="btn btn-primary" style={{ width: '100%', marginTop: '1rem' }}>
-              Proceed to Login
-            </Link>
+          <div style={{ position: 'fixed', inset: 0, background: 'rgba(2, 6, 23, 0.65)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 1000, padding: '1rem' }}>
+            <div style={{ background: '#fff', borderRadius: '16px', boxShadow: '0 20px 45px rgba(0,0,0,0.25)', padding: '2rem', maxWidth: '420px', width: '100%', textAlign: 'center' }}>
+              <CheckCircle2 size={56} style={{ color: 'var(--success)', marginBottom: '1rem', display: 'block', margin: '0 auto 1rem' }} />
+              <div className="alert alert-success" style={{ marginBottom: '1rem' }}>{success}</div>
+              <p style={{ marginBottom: '1rem', color: '#475569' }}>You can now sign in with your new account.</p>
+              <Link to="/login" className="btn btn-primary" style={{ width: '100%' }}>
+                Proceed to Login
+              </Link>
+            </div>
           </div>
         ) : (
           <form onSubmit={handleSubmit}>
@@ -120,6 +123,7 @@ const Signup = () => {
                   style={{ paddingLeft: '2.5rem', width: '100%' }}
                   placeholder="Enter your name"
                   value={username}
+                  autoComplete='off'
                   onChange={(e) => setUsername(e.target.value)}
                   required
                 />
@@ -133,10 +137,12 @@ const Signup = () => {
                 <input
                   type="email"
                   id="email"
+                  
                   className="form-control"
                   style={{ paddingLeft: '2.5rem', width: '100%' }}
                   placeholder="e.g. you@example.com"
                   value={email}
+                  autoComplete='off'
                   onChange={(e) => setEmail(e.target.value)}
                   required
                 />
