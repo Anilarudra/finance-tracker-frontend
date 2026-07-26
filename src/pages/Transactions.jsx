@@ -11,7 +11,7 @@ const Transactions = () => {
   const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const {user} = useAuth()
+  const { user } = useAuth()
 
   // Filtering states
   const [searchTerm, setSearchTerm] = useState('');
@@ -27,9 +27,9 @@ const Transactions = () => {
 
   useEffect(() => {
     if (user?.userId) {
-        fetchData();
+      fetchData();
     }
-}, [user]);
+  }, [user]);
 
   const fetchData = async () => {
     if (!user?.userId) return;
@@ -37,20 +37,20 @@ const Transactions = () => {
     setLoading(true);
 
     try {
-        const [txs, accs] = await Promise.all([
-            api.getTransactions(user.userId),
-            api.getAccounts(user.userId)
-        ]);
+      const [txs, accs] = await Promise.all([
+        api.getTransactions(user.userId),
+        api.getAccounts(user.userId)
+      ]);
 
-        setTransactions(txs || []);
-        setAccounts(accs || []);
+      setTransactions(txs || []);
+      setAccounts(accs || []);
     } catch (err) {
-        console.error(err);
-        setError("Failed to load data.");
+      console.error(err);
+      setError("Failed to load data.");
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
-};
+  };
 
   const handleOpenAddModal = () => {
     setEditingTransaction(null);
@@ -78,7 +78,7 @@ const Transactions = () => {
       if (editingTransaction) {
         await api.updateTransaction(editingTransaction.id, formData);
       } else {
-        await api.createTransaction(user.userId,formData);
+        await api.createTransaction(user.userId, formData);
       }
       setIsModalOpen(false);
       fetchData();
@@ -89,29 +89,55 @@ const Transactions = () => {
 
   // Helper selectors
   const getAccountName = (accountId) => {
-    const account = accounts.find(a => a.id === accountId);
-    return account ? account.name : 'Unknown Account';
+    const account = accounts.find(
+      a => Number(a.id) === Number(accountId)
+    );
+
+    return account ? account.bankName : "Unknown Account";
   };
+
+  const getAccountType = (accountId) => {
+
+    const account2 = accounts.find(
+      a => Number(a.id) === Number(accountId)
+    );
+
+    return account2 ? account2.status : "Unknown";
+  }
 
   // Apply filters
   const getFilteredTransactions = () => {
     return transactions.filter(tx => {
       const noteText = tx.note || tx.description || '';
       const matchesSearch = noteText.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                            tx.category?.toLowerCase().includes(searchTerm.toLowerCase());
-      
+        tx.category?.toLowerCase().includes(searchTerm.toLowerCase());
+
       const matchesType = filterType === 'ALL' || tx.type === filterType;
       const matchesCategory = filterCategory === 'ALL' || tx.category === filterCategory;
-      const matchesAccount = filterAccount === 'ALL' || tx.accountId === filterAccount;
-      
+      const matchesAccount =
+        filterAccount === 'ALL' ||
+        Number(tx.account?.id) === Number(filterAccount);
+
       let matchesStartDate = true;
       if (filterStartDate) {
-        matchesStartDate = new Date(tx.date) >= new Date(filterStartDate);
+        const txDate = new Date(tx.date);
+        const startDate = new Date(filterStartDate);
+
+        txDate.setHours(0, 0, 0, 0);
+        startDate.setHours(0, 0, 0, 0);
+
+        matchesStartDate = txDate >= startDate;
       }
 
       let matchesEndDate = true;
       if (filterEndDate) {
-        matchesEndDate = new Date(tx.date) <= new Date(filterEndDate);
+        const txDate = new Date(tx.date);
+        const endDate = new Date(filterEndDate);
+
+        txDate.setHours(0, 0, 0, 0);
+        endDate.setHours(23, 59, 59, 999);
+
+        matchesEndDate = txDate <= endDate;
       }
 
       return matchesSearch && matchesType && matchesCategory && matchesAccount && matchesStartDate && matchesEndDate;
@@ -136,7 +162,7 @@ const Transactions = () => {
         t.type,
         t.category,
         t.amount.toFixed(2),
-        `"${getAccountName(t.accountId).replace(/"/g, '""')}"`
+        `"${getAccountName(t.account?.id).replace(/"/g, '""')}"`
       ];
       csvRows.push(row.join(','));
     });
@@ -160,9 +186,9 @@ const Transactions = () => {
       return;
     }
     const printWindow = window.open('', '_blank');
-    
+
     // Sort transactions chronologically for statement
-    const sortedTxs = [...filteredTransactions].sort((a,b) => new Date(a.date) - new Date(b.date));
+    const sortedTxs = [...filteredTransactions].sort((a, b) => new Date(a.date) - new Date(b.date));
 
     const tableRows = sortedTxs.map(t => `
       <tr>
@@ -283,7 +309,7 @@ const Transactions = () => {
           <h1 style={{ fontSize: '2rem', fontWeight: 800 }}>Ledger Statements</h1>
           <p style={{ color: 'var(--text-secondary)', marginTop: '0.25rem' }}>Track, audit, edit, and export your transaction ledger rows</p>
         </div>
-        
+
         <div style={{ display: 'flex', gap: '0.75rem' }}>
           <button className="btn btn-secondary" onClick={exportToCSV} title="Export CSV Sheet">
             <Download size={18} />
@@ -348,7 +374,7 @@ const Transactions = () => {
           >
             <option value="ALL">All Accounts</option>
             {accounts.map(acc => (
-              <option key={acc.id} value={acc.id}>{acc.name}</option>
+              <option key={acc.id} value={acc.id}>{acc.bankName}</option>
             ))}
           </select>
         </div>
@@ -383,7 +409,7 @@ const Transactions = () => {
                 <th>Description</th>
                 <th>Type</th>
                 <th>Category</th>
-                
+                <th>Account Type</th>
                 <th style={{ textAlign: 'right' }}>Amount</th>
                 <th style={{ textAlign: 'center' }}>Actions</th>
               </tr>
@@ -399,24 +425,25 @@ const Transactions = () => {
                     </span>
                   </td>
                   <td>{tx.category}</td>
-                  <td style={{ 
-                    textAlign: 'right', 
-                    fontWeight: 700, 
+                  <td>{getAccountName(tx.account?.id)}</td>
+                  <td style={{
+                    textAlign: 'right',
+                    fontWeight: 700,
                     color: tx.type === 'INCOME' ? 'var(--success)' : 'var(--danger)',
                     fontFamily: 'var(--font-family-heading)'
                   }}>
                     {tx.type === 'INCOME' ? '+' : '-'}${tx.amount.toFixed(2)}
                   </td>
-                  
+
                   <td>
                     <div style={{ display: 'flex', justifyContent: 'center', gap: '0.25rem' }}>
                       <button className="btn-icon" onClick={() => handleOpenEditModal(tx)} title="Edit details">
                         <Edit2 size={15} />
                       </button>
-                      <button 
-                        className="btn-icon" 
-                        onClick={() => handleDeleteTransaction(tx.id)} 
-                        style={{ color: 'var(--danger)' }} 
+                      <button
+                        className="btn-icon"
+                        onClick={() => handleDeleteTransaction(tx.id)}
+                        style={{ color: 'var(--danger)' }}
                         title="Delete record"
                       >
                         <Trash2 size={15} />

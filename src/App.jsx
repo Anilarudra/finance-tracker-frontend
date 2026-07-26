@@ -9,6 +9,7 @@ import Dashboard from './pages/Dashboard';
 import Accounts from './pages/Accounts';
 import Transactions from './pages/Transactions';
 import Budgets from './pages/Budgets';
+import Profile from './pages/Profile';
 
 // Layout Components
 import Navbar from './components/Navbar';
@@ -90,6 +91,7 @@ function App() {
             <Route path="/accounts" element={<Accounts />} />
             <Route path="/transactions" element={<Transactions />} />
             <Route path="/budgets" element={<Budgets />} />
+            <Route path="/profile" element={<Profile />} />
           </Route>
 
           {/* Root Fallback Redirect */}

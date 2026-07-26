@@ -35,10 +35,12 @@ const login = async (email, password) => {
     try {
 
         const response = await api.login(email, password);
+        console.log("Login Response:", response);
 
         const userData = {
             userId: response.userId,
             email: response.email,
+            name: response.userName || '',
             token: response.token
         };
 
@@ -103,6 +105,15 @@ const login = async (email, password) => {
     setIsAuthenticated(false);
   };
 
+  const updateUserData = (updatedData) => {
+    const newUserData = {
+      ...user,
+      ...updatedData
+    };
+    setUser(newUserData);
+    localStorage.setItem('ft_current_user', JSON.stringify(newUserData));
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -113,6 +124,7 @@ const login = async (email, password) => {
         login,
         signup,
         logout,
+        updateUserData,
         setError
       }}
     >

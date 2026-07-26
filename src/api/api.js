@@ -153,6 +153,15 @@ getTransactions: async (userId) => {
     }
   );
 },
+
+  // User Profile
+
+  changePassword: async (userId, passwordData) => {
+    return request(`/users/${userId}/changepassword`, {
+      method: "PUT",
+      body: JSON.stringify(passwordData)
+    });
+  },
   
 };
 const request = async (endpoint, options = {}) => {

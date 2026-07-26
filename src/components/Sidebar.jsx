@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LayoutDashboard, Wallet, ArrowUpDown, PieChart, LogOut, X, TrendingUp } from 'lucide-react';
+import { LayoutDashboard, Wallet, ArrowUpDown, PieChart, LogOut, X, TrendingUp, User } from 'lucide-react';
 
 const Sidebar = ({ isOpen, onClose }) => {
   const { logout } = useAuth();
@@ -68,6 +68,16 @@ const Sidebar = ({ isOpen, onClose }) => {
           >
             <PieChart size={20} />
             <span>Budgets</span>
+          </NavLink>
+        </li>
+        <li className="sidebar-item">
+          <NavLink 
+            to="/profile" 
+            className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}
+            onClick={handleLinkClick}
+          >
+            <User size={20} />
+            <span>Profile</span>
           </NavLink>
         </li>
       </ul>

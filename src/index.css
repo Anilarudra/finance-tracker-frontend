@@ -516,7 +516,7 @@ tr:last-child td {
 /* Cards lists (Accounts & Budgets) */
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(310px, 1fr));
   gap: 1.5rem;
  
   margin-top: 1.5rem;
@@ -526,7 +526,7 @@ tr:last-child td {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 250px;
+  height: 300px;
   position: relative;
   overflow: hidden;
 }
