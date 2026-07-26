@@ -409,7 +409,7 @@ const Transactions = () => {
                 <th>Description</th>
                 <th>Type</th>
                 <th>Category</th>
-                <th>Account Type</th>
+                <th>Bank Account</th>
                 <th style={{ textAlign: 'right' }}>Amount</th>
                 <th style={{ textAlign: 'center' }}>Actions</th>
               </tr>
