@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { LogIn, User, Lock, TrendingUp } from 'lucide-react';
+import { Home as HomeIcon, LogIn, User, Lock, TrendingUp, Wallet } from 'lucide-react';
+import heroImage from '../assets/hero.png';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -40,6 +41,12 @@ const Login = () => {
 
   return (
     <div className="auth-wrapper">
+      <Link to="/" className="auth-home-link"><HomeIcon size={16} /> Home</Link>
+      <div className="auth-decoration" aria-hidden="true">
+        <img src={heroImage} alt="" />
+        <div className="auth-decoration-copy"><Wallet size={16} /><span>Build a clearer<br /><strong>money story.</strong></span></div>
+        <div className="auth-decoration-line" />
+      </div>
       <div className="auth-card glass-panel">
         <div className="auth-header">
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>

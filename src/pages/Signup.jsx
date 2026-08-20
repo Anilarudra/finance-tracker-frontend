@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { UserPlus, User, Mail, Lock, CheckCircle2, TrendingUp } from 'lucide-react';
+import { Home as HomeIcon, UserPlus, User, Mail, Lock, CheckCircle2, TrendingUp, Sparkles } from 'lucide-react';
+import heroImage from '../assets/hero.png';
 
 const Signup = () => {
   const [username, setUsername] = useState('');
@@ -89,6 +90,12 @@ const Signup = () => {
 
   return (
     <div className="auth-wrapper">
+      <Link to="/" className="auth-home-link"><HomeIcon size={16} /> Home</Link>
+      <div className="auth-decoration" aria-hidden="true">
+        <img src={heroImage} alt="" />
+        <div className="auth-decoration-copy"><Sparkles size={16} /><span>Start small.<br /><strong>Grow steadily.</strong></span></div>
+        <div className="auth-decoration-line" />
+      </div>
       <div className="auth-card glass-panel">
         <div className="auth-header">
           <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem' }}>

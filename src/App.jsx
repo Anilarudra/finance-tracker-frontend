@@ -10,6 +10,7 @@ import Accounts from './pages/Accounts';
 import Transactions from './pages/Transactions';
 import Budgets from './pages/Budgets';
 import Profile from './pages/Profile';
+import Home from './pages/Home';
 
 // Layout Components
 import Navbar from './components/Navbar';
@@ -68,6 +69,7 @@ function App() {
       <Router>
         <Routes>
           {/* Public Routes */}
+          <Route path="/" element={<Home />} />
           <Route 
             path="/login" 
             element={
@@ -94,8 +96,8 @@ function App() {
             <Route path="/profile" element={<Profile />} />
           </Route>
 
-          {/* Root Fallback Redirect */}
-          <Route path="*" element={<Navigate to="/dashboard" replace />} />
+          {/* Unknown paths fall back to the public home page */}
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </Router>
     </AuthProvider>
