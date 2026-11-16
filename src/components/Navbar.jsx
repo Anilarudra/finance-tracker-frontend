@@ -12,7 +12,7 @@ const Navbar = ({ onToggleSidebar }) => {
           <Menu size={24} />
         </button>
         <h2 style={{ fontSize: '1.25rem', fontWeight: 500, fontFamily: 'var(--font-family-base)' }}>
-          Welcome back {user?.username}, <span style={{ color: 'var(--primary)', fontWeight: 600 }}>{user?.username}</span>
+          Welcome back {user?.name}, <span style={{ color: 'var(--primary)', fontWeight: 600 }}>{user?.username}</span>
         </h2>
       </div>
 
